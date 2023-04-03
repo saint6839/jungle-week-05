@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
     rbtree_insert(t, 30);
     
     // delete_rbtree(t);
-    node_t *z = rbtree_find(t, 30);
-    
+    // rbtree_find(t, 30);
+    rbtree_min(t);
+    rbtree_max(t);
     return 0;
 }

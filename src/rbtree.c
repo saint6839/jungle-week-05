@@ -232,15 +232,33 @@ node_t *rbtree_find(const rbtree *t, const key_t key)
   return NULL;
 }
 
+// rbtree의 최솟값 찾는 함수
 node_t *rbtree_min(const rbtree *t)
 {
-  // TODO: implement find
+  node_t *x = t->root;
+  while (x != t->nil)
+  {
+    if (x->left == t->nil) {
+      return x;
+    }
+    x = x->left;
+  }
+  
   return t->root;
 }
 
+// rbtree의 최댓값 찾는 함수
 node_t *rbtree_max(const rbtree *t)
 {
-  // TODO: implement find
+  node_t *x = t->root;
+  while (x != t->nil)
+  {
+    if (x->right == t->nil) {
+      return x;
+    }
+    x = x->right;
+  }
+  
   return t->root;
 }
 
