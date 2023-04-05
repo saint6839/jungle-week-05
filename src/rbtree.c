@@ -119,7 +119,6 @@ void right_rotate(rbtree *t, node_t *y)
 
 void rbtree_insert_fixup(rbtree *t, node_t *z)
 {
-  printf("%d", z->parent->color);
   while (z->parent->color == RBTREE_RED)
   { // 새로 삽입된 노드는 RED인데, 부모 또한 RED인 경우에 FIXUP 수행
     if (z->parent == z->parent->parent->left)
@@ -203,7 +202,6 @@ node_t *rbtree_insert(rbtree *t, const key_t key)
   {
     y->right = z;
   }
-
   z->left = t->nil;
   z->right = t->nil;
   z->color = RBTREE_RED;
@@ -275,7 +273,7 @@ node_t *tree_minimum(rbtree *t, node_t *y)
   return y;
 }
 
-// u노드의 위치를 v노드로 교체해주는 함수
+// v노드의 위치를 u노드로 교체해주는 함수
 void rbtree_transplant(rbtree *t, node_t *u, node_t *v)
 {
   if (u->parent == t->nil)
@@ -347,14 +345,14 @@ void *rbtree_erase_fixup(rbtree *t, node_t *x)
       }
       else // 형제의 자식 중 RED인 자식이 있을 경우 case 3)에 해당, 회전을 통해 case 4)로 변경해주어야함
       {
-        if (w->left->color == RBTREE_BLACK)
+        if (w->left->color == RBTREE_BLACK) // 형제의 자식의 오른쪽 자식 색깔이 RED인 경우 -> 오른쪽 자식이 red인 상태에서 왼쪽 자식이 red인 상태로 바꾸어 준다.
         {
           w->right->color = RBTREE_BLACK; // 형제 오른쪽 노드를 RED -> BLACK
           w->color = RBTREE_RED;          // 형제 색깔을 BLACK -> RED
           left_rotate(t, w);              // 왼쪽으로 회전
           w = x->parent->left;            // x의 위치가 바뀌었으므로, x의 형제인 w의 위치 또한 갱신해줌
         }
-        // case 4)에 해당
+        // 형제의 자식의 왼쪽 노드의 자식 색깔이 RED인 경우 case 4)에 해당
         w->color = x->parent->color;     // 형제의 색을 부모의 색으로 변경
         x->parent->color = RBTREE_BLACK; // 부모의 색을 BLACK으로 변경
         w->left->color = RBTREE_BLACK;   // 형제의 왼쪽 자식의 색을 BLACK으로 변경
@@ -411,10 +409,6 @@ int rbtree_erase(rbtree *t, node_t *z)
   }
 
   free(z); // z가 삭제 되었으므로, z의 메모리 주소를 비워준다.
-  t->nil->parent = NULL;
-  t->nil->right = NULL;
-  t->nil->left = NULL;
-  t->nil->color = RBTREE_BLACK;
   return 0;
 }
 
@@ -423,6 +417,7 @@ void sort_asc(node_t *root, node_t *nil, key_t *arr, int *index) {
   if (root == nil) {
     return;
   }
+  
   sort_asc(root->left, nil, arr, index);
   arr[*index] = root->key;
   (*index)++;
